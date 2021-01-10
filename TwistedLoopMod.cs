@@ -1,9 +1,7 @@
 ﻿using BepInEx;
 using RoR2;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-using static RoR2.Navigation.MapNodeGroup;
 
 namespace TwistedLoopMod
 {
@@ -27,9 +25,9 @@ namespace TwistedLoopMod
                 placementMode = DirectorPlacementRule.PlacementMode.Approximate,
                 //set the actual position of the portal from the player
                 position = portalPosition,
-                //set the distance the portal is allowed to spawn away from the portal
-                minDistance = 30,
-                maxDistance = 60
+                //set the distance the portal is allowed to spawn away from the player
+                minDistance = 1,
+                maxDistance = 0
 
             }, RoR2Application.rng));
 
@@ -46,10 +44,6 @@ namespace TwistedLoopMod
 
                 //do not fuck up the Fade Out
                 orig(self);
-
-                //Original method of spawning portal. Works but is inconsistent.
-                //GameObject gameObject = Resources.Load<GameObject>("prefabs/networkedobjects/PortalShop");
-                //UnityEngine.Object.Instantiate<GameObject>(gameObject);
 
                 //Determine whether server is active
                 if (NetworkServer.active) {

@@ -2,6 +2,9 @@
 A mod that spawns a blue portal upon defeating the Twisted Scavenger boss on A Moment, Whole. Allows for infinite single-run lunar coin farming!
 
 #Changelog
+v1.1.1:
+-Updated method for portal spawning to spawn portal closer to host player.
+
 v1.1.0:
 -Updated method for portal creation. Still currently only possible to spawn Blue Portal.
 -Portal should now spawn relative to the host for increased multiplayer compatibility.
