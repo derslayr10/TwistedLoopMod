@@ -6,28 +6,27 @@ using UnityEngine.Networking;
 namespace TwistedLoopMod
 {
     [BepInDependency("com.bepis.r2api")]
-    //Change these
-    [BepInPlugin("com.Derslayr.TwistedLoopMod", "TwistedLoopMod", "1.1.0")]
+    [BepInPlugin("com.Derslayr.TwistedLoopMod", "TwistedLoopMod", "1.1.1")]
     public class TwistedLoopMod : BaseUnityPlugin
     {
-        //Method for spawning portal/handling where to place portal
-        private void SpawnPortal(Vector3 portalPosition){
 
-            //create SpawnCard for Blue Portal
-            SpawnCard portalSpawn = ScriptableObject.CreateInstance<SpawnCard>();
-            portalSpawn.prefab = Resources.Load<GameObject>("prefabs/networkedobjects/PortalShop");
+        //Method for spawning portal/handling where to place portal
+        private void SpawnPortal(){
+
+            //setting position of portal spawn to center of arena on the floor
+            Vector3 portalPosition = new Vector3 (0f,-10f,0f);
 
             //create the object of the Portal and try to spawn it using DirectorCore instance
-            GameObject portalObject = DirectorCore.instance.TrySpawnObject(new DirectorSpawnRequest(portalSpawn, new DirectorPlacementRule
+            GameObject portalObject = DirectorCore.instance.TrySpawnObject(new DirectorSpawnRequest(Resources.Load<SpawnCard>("spawncards/interactablespawncard/iscShopPortal"), new DirectorPlacementRule
             {
                 
                 //set placement mode of the Portal Spawner
-                placementMode = DirectorPlacementRule.PlacementMode.Approximate,
-                //set the actual position of the portal from the player
+                placementMode = DirectorPlacementRule.PlacementMode.Direct,
+                //set the actual position of the portal
                 position = portalPosition,
-                //set the distance the portal is allowed to spawn away from the player
-                minDistance = 1,
-                maxDistance = 0
+                //set the distance the portal is allowed to spawn away from specified location
+                minDistance = 10,
+                maxDistance = 15
 
             }, RoR2Application.rng));
 
@@ -45,29 +44,11 @@ namespace TwistedLoopMod
                 //do not fuck up the Fade Out
                 orig(self);
 
-                //Determine whether server is active
-                if (NetworkServer.active) {
+                //run spawn portal method
+                SpawnPortal();
 
-                    //create a "player" that is equal to the Host of the session
-                    var tempPlayer = LocalUserManager.GetFirstLocalUser();
-
-                    //verify that tempPlayer is not empty
-                    if (tempPlayer != null) {
-
-                        //make sure tempPlayer has a CharacterBody
-                        if (tempPlayer.cachedBody) {
-
-                            //take the corePosition from tempPlayer's CharacterBody and spawn portal at that location
-                            SpawnPortal(tempPlayer.cachedBody.corePosition);
-
-                            //debugging message to run after portal has spawned
-                            Chat.AddMessage("Blue Portal has spawned in the field!");
-
-                        }
-                    
-                    }
-
-                }
+                //debugging message to run after portal has spawned
+                Chat.AddMessage("Blue Portal has spawned in the field!");
 
             };
 

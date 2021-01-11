@@ -3,7 +3,7 @@ A mod that spawns a blue portal upon defeating the Twisted Scavenger boss on A M
 
 #Changelog
 v1.1.1:
--Updated method for portal spawning to spawn portal closer to host player.
+-Updated method for portal spawning to no longer spawn relative to player, but at static location near center of A Moment, Whole.
 
 v1.1.0:
 -Updated method for portal creation. Still currently only possible to spawn Blue Portal.
