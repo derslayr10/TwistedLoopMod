@@ -3,6 +3,9 @@ A mod that spawns a portal upon defeating the Twisted Scavenger boss on A Moment
 
 # Changelog
 
+v2.0.1:
+-Fixed issue with version number in console
+
 v2.0.0:
 -Total rewrite of spawn algorithm.
 	-Now able to spawn Bazaar, Celestial, Gold, or Void Portal!
