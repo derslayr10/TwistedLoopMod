@@ -6,7 +6,7 @@ using UnityEngine;
 namespace TwistedLoopMod
 {
     [BepInDependency("com.bepis.r2api")]
-    [BepInPlugin("com.Derslayr.TwistedLoopMod", "TwistedLoopMod", "1.1.1")]
+    [BepInPlugin("com.Derslayr.TwistedLoopMod", "TwistedLoopMod", "2.0.0")]
     public class TwistedLoopMod : BaseUnityPlugin
     {
 
