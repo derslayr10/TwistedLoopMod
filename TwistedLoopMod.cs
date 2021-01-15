@@ -1,23 +1,53 @@
 ﻿using BepInEx;
-using BepInEx.Configuration;
 using RoR2;
 using UnityEngine;
 
 namespace TwistedLoopMod
 {
     [BepInDependency("com.bepis.r2api")]
-    [BepInPlugin("com.Derslayr.TwistedLoopMod", "TwistedLoopMod", "2.0.1")]
+    [BepInPlugin("com.Derslayr.TwistedLoopMod", "TwistedLoopMod", "2.1.0")]
     public class TwistedLoopMod : BaseUnityPlugin
     {
 
         //create config options
-        public static int portalTypeControl { get; set; }
+        //create Portal Spawning Config
+        public static int PortalTypeControl { get; set; }
+        //create Fade Out multiplier
+        public static float FadeOutMultiplier { get; set; }
 
         //method for running configs
         private void RunConfig() {
 
             //bind config to make file
-            portalTypeControl = Config.Bind<int>("PortalTypeControl", "portalType", 0, "Controls the portal type spawned in A Moment, Whole. 0 = Bazaar, 1 = Celestial, 2 = Gold, 3 = Null, 4 = All. Default: 0").Value;
+            PortalTypeControl = Config.Bind<int>("PortalTypeControl", "portalType", 0, "Controls the portal type spawned in A Moment, Whole. 0 = Bazaar, 1 = Celestial, 2 = Gold, 3 = Null, 4 = All. Default: 0").Value;
+
+            FadeOutMultiplier = Config.Bind<float>("FadeOutMultiplier", "fadeOutMultiplier", 3.0f, "Controls the value the FadeOut duration after the Scavenger fight is multiplied by. This is to allow revived hosts time to activate the portal. Default Value: 3.0").Value;
+
+            Logger.LogMessage("The config for TwistedLoopMod is loaded!");
+
+        }
+
+        //method to revive dead players after Lunar Scavenger fight
+        private void ReviveDeadPlayers() {
+            
+            //get list of all players
+            var players = RoR2.PlayerCharacterMasterController.instances;
+
+            //check if there are dead players
+            if (RoR2.Run.instance.livingPlayerCount < RoR2.Run.instance.participatingPlayerCount) {
+
+                //iterate through the player list of players and revive all that are dead
+                for (int i = 0; i < RoR2.Run.instance.participatingPlayerCount; i++) {
+
+                    if (players[i].master.IsDeadAndOutOfLivesServer()) {
+
+                        players[i].master.RespawnExtraLife();
+                    
+                    }
+                
+                }
+            
+            }
         
         }
 
@@ -25,7 +55,7 @@ namespace TwistedLoopMod
         private void SpawnPortal(){
 
             //check for if AllPortals option is enabled, if not then decide which portal
-            if (portalTypeControl != 4)
+            if (PortalTypeControl != 4)
             {
 
                 //setting position of portal spawn to center of arena on the floor
@@ -35,7 +65,7 @@ namespace TwistedLoopMod
                 SpawnCard portalCard = ScriptableObject.CreateInstance<SpawnCard>();
 
                 //Bazaar portal
-                if (portalTypeControl == 0)
+                if (PortalTypeControl == 0)
                 {
 
                     portalCard.prefab = Resources.Load<GameObject>("prefabs/networkedobjects/PortalShop");
@@ -43,7 +73,7 @@ namespace TwistedLoopMod
                 }
 
                 //Celestial Portal
-                else if (portalTypeControl == 1)
+                else if (PortalTypeControl == 1)
                 {
 
                     portalCard.prefab = Resources.Load<GameObject>("prefabs/networkedobjects/PortalMS");
@@ -51,7 +81,7 @@ namespace TwistedLoopMod
                 }
 
                 //Gold Portal
-                else if (portalTypeControl == 2)
+                else if (PortalTypeControl == 2)
                 {
 
                     portalCard.prefab = Resources.Load<GameObject>("prefabs/networkedobjects/PortalGoldshores");
@@ -59,7 +89,7 @@ namespace TwistedLoopMod
                 }
 
                 //Null Portal
-                else if (portalTypeControl == 3)
+                else if (PortalTypeControl == 3)
                 {
 
                     portalCard.prefab = Resources.Load<GameObject>("prefabs/networkedobjects/PortalArena");
@@ -94,7 +124,7 @@ namespace TwistedLoopMod
             }
 
             //if AllPortals active, handle it
-            else if (portalTypeControl == 4)
+            else if (PortalTypeControl == 4)
             {
 
                 //create position to be able to spawn portals however
@@ -103,7 +133,7 @@ namespace TwistedLoopMod
                 float portalZPosition = 0f;
 
                 //loop through to make 4 portals
-                for (int i = 0; i < portalTypeControl; i++)
+                for (int i = 0; i < PortalTypeControl; i++)
                 {
 
                     //create position for the portal
@@ -182,15 +212,19 @@ namespace TwistedLoopMod
             //debugging message to ensure mod loading
             Logger.LogMessage("Loaded TwistedLoopMod mod by Derslayr!");
 
-            //load mod configs
-            RunConfig();
-            Logger.LogMessage("The config for TwistedLoopMod is loaded!");
+            EntityStates.Missions.LunarScavengerEncounter.FadeOut.duration *= FadeOutMultiplier;
 
             //event trigger hook for Portal Spawn. Set to beginning of Fade Out transition after killing Twisted Scavenger
             On.EntityStates.Missions.LunarScavengerEncounter.FadeOut.OnEnter += (orig, self) => {
 
                 //do not fuck up the Fade Out
                 orig(self);
+
+                //load mod configs
+                RunConfig();
+
+                //respawn dead players
+                ReviveDeadPlayers();
 
                 //run spawn portal method
                 SpawnPortal();
