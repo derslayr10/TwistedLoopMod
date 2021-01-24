@@ -3,6 +3,9 @@ A mod that spawns a portal upon defeating the Twisted Scavenger boss on A Moment
 
 # Changelog
 
+v2.1.1:
+-Fixed Config generation for the correct location.
+
 v2.1.0:
 -Addressed issue of not being able to activate portal by non-host players in Multiplayer. All dead players are now revived when the portal spawns.
 -Added config option for FadeOutMultiplier. Default FadeOutTimer is too short for revived host to have time to activate portal if they are too far away.

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace TwistedLoopMod
 {
     [BepInDependency("com.bepis.r2api")]
-    [BepInPlugin("com.Derslayr.TwistedLoopMod", "TwistedLoopMod", "2.1.0")]
+    [BepInPlugin("com.Derslayr.TwistedLoopMod", "TwistedLoopMod", "2.1.1")]
     public class TwistedLoopMod : BaseUnityPlugin
     {
 
@@ -212,6 +212,9 @@ namespace TwistedLoopMod
             //debugging message to ensure mod loading
             Logger.LogMessage("Loaded TwistedLoopMod mod by Derslayr!");
 
+            //load mod configs
+            RunConfig();
+
             EntityStates.Missions.LunarScavengerEncounter.FadeOut.duration *= FadeOutMultiplier;
 
             //event trigger hook for Portal Spawn. Set to beginning of Fade Out transition after killing Twisted Scavenger
@@ -219,9 +222,6 @@ namespace TwistedLoopMod
 
                 //do not fuck up the Fade Out
                 orig(self);
-
-                //load mod configs
-                RunConfig();
 
                 //respawn dead players
                 ReviveDeadPlayers();
