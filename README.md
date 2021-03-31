@@ -3,6 +3,9 @@ A mod that spawns a portal upon defeating the Twisted Scavenger boss on A Moment
 
 # Changelog
 
+v2.1.2:
+-Updated for Post-Anniversary Update
+
 v2.1.1:
 -Fixed Config generation for the correct location.
 

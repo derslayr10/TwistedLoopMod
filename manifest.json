@@ -1,9 +1,9 @@
 {
     "name": "TwistedLoopMod",
-    "version_number": "2.1.1",
+    "version_number": "2.1.2",
     "website_url": "https://github.com/derslayr10/TwistedLoopMod",
     "description": "A mod that spawns a portal upon defeating the Twisted Scavenger boss on A Moment, Whole. Allows for infinite single-run lunar coin farming!",
     "dependencies": [
-        "tristanmcpherson-R2API-2.5.14", "bbepis-BepInExPack-5.3.1"
+        "bbepis-BepInExPack-5.3.1"
     ]
 }
